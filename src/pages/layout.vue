@@ -1,26 +1,141 @@
 <template>
-  <div class="index-wrap">
-     <div class="index-left">
-       <div class="index-left-block">
-           <p class="button">全部产品</p>
-           <p>全部产品222</p>
-           <hr />
+   <div class="index-wrap">
+       <div class="index-left ">
+           <div class="index-left-block">
+               <h2>全部产品</h2>
+               <div v-for="(title,index) in shujuyuan">
+                  <h3>{{title.biaoti }}</h3>
+                  <ul>
+                    <li v-for="items in title.list">
+                      <a target="_blank" :href="items.url"> {{items.name }}</a>
+                      <span v-if="items.hot" class="hot-tag">HOT</span>
+                    </li>                     
+                  </ul> 
+                  <div v-if="index%2 == 0" class="hr"></div>                    
+                </div>
+           </div>
+           <div class="index-left-block lastest-news">
+               <h2>最热歌手</h2>
+                  <ul>
+                      <li v-for="geshou in remen">
+                           <a target="_blank" :href="geshou.pic_huge">{{geshou.artist_name }}</a>
+                      </li>
+                  </ul>                                    
+           </div>
        </div>
-     </div>
-     <div class="index-right">
-
-     </div>
-  </div>
+       <div class="index-right">
+            <div class="swiper-size">
+                <swiper :options="swiperOption">
+                <swiper-slide>
+                    <a target="_blank" href="https://www.taobao.com/">
+                         <img class="swiperimg" src="../assets/slideShow/j1.jpg" alt="">
+                    </a>                  
+                </swiper-slide>
+                <swiper-slide>
+                    <a target="_blank"  href="https://www.taobao.com/">
+                         <img class="swiperimg" src="../assets/slideShow/j2.jpg" alt="">
+                    </a> 
+                </swiper-slide>
+                <swiper-slide>
+                   <a target="_blank" href="https://www.taobao.com/">
+                         <img class="swiperimg" src="../assets/slideShow/j3.jpg" alt="">
+                    </a> 
+                </swiper-slide>
+                <swiper-slide>
+                    <a target="_blank" href="https://www.taobao.com/">
+                         <img class="swiperimg" src="../assets/slideShow/j4.jpg" alt="">
+                    </a> 
+                </swiper-slide>
+                <div class="swiper-pagination"  slot="pagination"></div>
+                <div class="swiper-button-prev" slot="button-prev"></div>
+                <div class="swiper-button-next" slot="button-next"></div>
+            </swiper>  
+            </div>       
+       </div>
+   </div>
 </template>
 
 <script>
 export default {
-  name:"layout",
-  data(){
-      return{
-         
-      }
-  }
+   name:"buju",
+   data(){
+       return{
+        swiperOption: {
+           pagination: {
+                el: '.swiper-pagination',
+            },
+            loop:true,
+            navigation: {
+                nextEl: '.swiper-button-next',
+                prevEl: '.swiper-button-prev',
+            }
+        },
+         remen:[],
+         shujuyuan:[
+             {
+                 biaoti:"手机应用类",
+                 list:[
+                     {
+                         name:"91助手",
+                         url:"https://www.baidu.com",
+                         hot:false
+                     },
+                     {
+                         name:"豌豆荚",
+                         url:"https://www.baidu.com",
+                         hot:true
+                     },
+                     {
+                         name:"金山毒霸",
+                         url:"https://www.baidu.com",
+                          hot:false
+                     }
+                 ]
+             },
+             {
+                 biaoti:"PC产品",
+                 list:[
+                     {
+                         name:"webstorm",
+                         url:"https://www.baidu.com",
+                          hot:false
+                     },
+                     {
+                         name:"sublime",
+                         url:"https://www.baidu.com",
+                          hot:false
+                     },
+                     {
+                         name:"hbuild",
+                         url:"https://www.baidu.com",
+                         hot:true
+                     },
+                     {
+                         name:"atom",
+                         url:"https://www.baidu.com",
+                          hot:false
+                     }
+                 ]
+             }
+         ]
+       }
+   },
+   created(){     
+      this.$axios.get("https://api.apiopen.top/musicRankingsDetails?type=1",{
+         params:{
+            count:10,
+            type:"top"
+         }
+      })
+      .then(res => {
+         console.log(res.data.result)
+         this.remen = res.data.result
+      })
+      .catch(error => {
+         console.log(error);
+      })
+   }
+   
 }
 </script>
 
