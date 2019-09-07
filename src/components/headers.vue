@@ -53,6 +53,7 @@ export default {
 }
 .head-nav ul {
   overflow: hidden;
+  list-style: none;
 }
 .head-nav li {
   cursor: pointer;

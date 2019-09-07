@@ -50,6 +50,17 @@
                 <div class="swiper-button-prev" slot="button-prev"></div>
                 <div class="swiper-button-next" slot="button-next"></div>
             </swiper>  
+            </div>
+            <div class="index-board-list">
+                <div class="index-board-item" v-for="(pro,index) in productList" :key="index"  :class="['index-board-' +pro.tag,{'line-last' : index%2 ==1}]">
+                    <div class="index-board-item-inner">
+                        <h2>{{ pro.title }}</h2>
+                        <h3>{{ pro.desc }}</h3>
+                        <router-link target="_blank" :to="pro.tag" class="button">立即购买</router-link>
+                    </div>
+
+
+                </div>
             </div>       
        </div>
    </div>
@@ -71,9 +82,31 @@ export default {
             }
         },
          remen:[],
+         productList:[
+                     {
+                         title:"开放产品",
+                         desc:"开放产品是一款开放产品",
+                         tag:"earth"
+                     },
+                     {
+                         title:"品牌营销",
+                         desc:"品牌营销帮助你的产品更好的找到定位",
+                         tag:"loud"
+                     },
+                     {
+                         title:"使命必达",
+                         desc:"使命必达快速迭代永远保持最前端的速度",
+                         tag:"car"
+                     },
+                     {
+                         title:"勇攀高峰",
+                         desc:"帮你勇闯高峰，到达事业的顶峰",
+                         tag:"hill"
+                     }
+                 ],
          shujuyuan:[
              {
-                 biaoti:"手机应用类",
+                 biaoti:"手机应用类",                 
                  list:[
                      {
                          name:"91助手",
@@ -198,7 +231,28 @@ export default {
 }
 .index-board-item-inner {
     min-height: 125px;
-    padding-left: 120px;
+    padding-left: 130px;
+}
+.index-board-item-inner h2 {
+
+    color:#fff;
+    padding: 10px 15px 20px;
+    margin-bottom: 20px;
+    margin-left: 15px;
+}
+.index-board-item-inner h3 {
+    padding: 0 15px 5px 15px;
+    margin-left: 15px;
+    color: #222;
+}
+.button {
+    color: #fff;
+    background: #4fc08d;
+    padding: 10px 20px;
+    display: inline-block;
+    cursor: pointer;
+    margin-top: 15px;
+    margin-left: 25px;
 }
 .index-board-car .index-board-item-inner {
     background: url(../assets/images/1.png) no-repeat;
@@ -246,13 +300,7 @@ export default {
     margin-top: 15px;
     height: 400px;
 }
-.button {
-    width: 250px;
-    color: #fff;
-    background: #4fc08d;
-    padding: 10px 20px;
-    display: inline-block;
-    cursor: pointer;
-}
+
+
 
 </style>
