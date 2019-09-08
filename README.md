@@ -96,17 +96,105 @@ children:{
           path: "/car",
           name: "Car",
           component:Car}
-建立了路由。路由引用需要<router-link>。<router-link>组件支持用户在具有路由功能的应用中点击导航。通过to属性<必选>指定目标地址，默认渲染为带有正确连接的<a>标签，可以通过配置tag属性生成别的标签。另外，当目标路由成功激活时，链接元素自动设置一个表示激活的css类名.实例：<router-link tag="li" :to="{path: list.tag}">123 </router-link>。<router-link>需要用<router-view>来显示。在本例中<div class="detail-left">下面放<router-link>，在<div class="detail-right">下面放<router-view>。路由进来要设置一个默认页面，这就需要重定向，在路由router下面details下面加上“redirect:"/proddetails/car",
+建立了路由。路由引用需要<router-link>。<router-link>组件支持用户在具有路由功能的应用中点击导航。通过to属性<必选>指定目标地址，默认渲染为带有正确连接的<a>标签，可以通过配置tag属性生成别的标签。另外，当目标路由成功激活时，链接元素自动设置一个表示激活的css类名.实例：<router-link tag="li" :to="{path: list.tag}">123 </router-link>。<router-link>需要用<router-view>来显示。用<router-view>显示时，不需要再父级页面引入子级页面。在本例中<div class="detail-left">下面放<router-link>，在<div class="detail-right">下面放<router-view>。路由进来要设置一个默认页面，这就需要重定向，在路由router下面details下面加上“redirect:"/proddetails/car",  
 点到的标签要显示长亮，可以在class里面加一个{active-class="active"}，实例<p active-class="active">12</p>
 本页面上面的图片会跟着一起变动，所以也需要数组，我用for循环，改动src，没有效果。视频讲解中，是讲网址变更为图片。先创建一个computed组件，再在里面新建一个函数getUrl。通过[this.$route.path]获取地址。并将地址赋值给imgUrl。return this.imgUrl[this.$route.path];。在data数据中，新建imgUrl，并通过require，将图片赋值给imgUrl中的地址。最后在视图中通过动态绑定，将img表示出来 <img :src="getUrl" alt="">。
-点击导航的时候，路由路径发生改变，那么可以通过路由路径的改变，来改变相应的图片。首先获取路径的变化{this.$route.path}，这个可以获取当前的路由路径。将当前路径交给imgUrl，imgUrl在data中已经赋值，通过return将当前路径imgUrl转换成图片地址。
+点击导航的时候，路由路径发生改变，那么可以通过路由路径的改变，来改变相应的图片。首先获取路径的变化{this.$route.path}，这个可以获取当前的路由路径。将当前路径交给imgUrl，imgUrl在data中已经赋值，通过return将当前路径imgUrl转换成图片地址:
+imgsUrl:{
+               "/children/earth":require("../assets/images/3.png"),
+               "/children/loud":require("../assets/images/2.png"),
+               "/children/car":require("../assets/images/1.png"),
+               "/children/hill":require("../assets/images/4.png"),
+           }
 通过return将图片地址交到getUrl中。此时<img :src="getUrl" alt="">中的地址就根据当前路由变为了相应图片的地址。
+附在vue中引入图片的三种方式：
+1、在js中引入图片，在template中自动绑定。由于图片一般是动态绑定的，引入图片一般使用require()，图片是作为模块引入项目中。这样webpack会根据自己的规则解析图片，打包后，会替换为解析后的图片地址。如果直接写路径，打包后webpack是找不到图片的。
+// template中动态绑定
+<img :src="imgSrc">
+// javascript
+data () {
+  return {
+    imgSrc:require('../assets/img/...') //可以是对象，里面放很多图片地址
+  }
+}
+2、如果在template中引入绝对路径，不需要require()。
+// template 没有使用动态绑定
+<img src="../assets/img/...'>
+3、在style中引入图片，使用url()。
+// style 
+.index-board-car .index-board-item-inner{
+  background: url(../assets/images/1.png) no-repeat;
+}
+引入vue文件，可以通过路由，在路由js里面配置，也可以直接引用：
+import Counter from "./components/Counter"
+绑定：components:{Counter}
+在视图区域加载：<Counter />
 
-children路由嵌套：
-component: account,
-          // 使用 children 属性，实现子路由，同时，子路由的 path 前面，不要带 / ，否则永远以根路径开始请求，这样不方便我们用户去理解URL地址
-          children: [
-            { path: 'login', component: login },
-            { path: 'register', component: register }
-          ]
-        }
+购物中加减符号，就是 + - 通过class来渲染出来的，而要实现增加或减少，要通过@click事件函数来解决。这些函数要计算，所以要用新建methods组件。中间的输入框通过input加载。输入框中的数据要符合一定的规律，比如购物，数量不能是负数，输入字母不能购买，要返回数字，最大项不能无限加。counter是一个可调用的组件，可以用在不同组件中，比如电冰箱，电视机等等。所以数量是通过其他组件传递到counter里面进行计算判定，所以要用props来接收数据。
+  
+   <div class="counter-btn" @click="mins"> - </div>        //给减号加样式，通过点击赋值给mins函数，点击会减1
+      <div class="counter-show">
+          <input type="text" v-model="number" @keyup="inputHandler">  //给敲击键盘的值进行转换。操作通过methods中的函数完成。
+      </div>
+      <div class="counter-btn" @click="maxs"> + </div>
+
+  props:{
+     max:{
+        type:Number,     //定义传输过来的数字为数字类型，最大初始值为5
+        default:5
+     },
+     min:{
+        type:Number,
+        default:1
+     }
+   },
+   methods:{
+     mins(){
+       if(this.number <= this.min){    
+         return;  // return的是props传递过来的数据，这个数据如果比最小值this.min小，那么retur回nmin的默认值1.
+       }
+       this.number--;
+     },
+     maxs(){
+       if(this.number >= this.max){
+          return;  // return的是props传递过来的数据，这个数据如果比最大值this.max大，那么return回max的默认值5.
+       }
+       this.number++;
+     },
+     inputHandler(){
+     let fix;                                             //新建一个第三方值fix
+     if(typeof this.number === "string"){                 //判断，如果输入的是字符串，通过正则变换成数字
+       fix = Number(this.number.replace(/\D/g,""));       // /\D是非数字，加 /g是全局生效。后面是变为空。空会通过计算变为1.
+     }else{
+       fix = this.number                                  //如果是数字，那么返回将数字返回给fix
+     }
+      if(fix > this.max || fix < this.min){               //如果输入的数字大于最大值，或小于最小值，返回最小值1.
+         fix = this.min
+      }
+     this.number = fix                                    //将fix的值还给number。
+   }
+   }   
+   这是一个可以调用的组件，所以需要调用的组件可以重新给max和min赋值，比如电视最多有50台，空调最多有100台，这个在需要调用的组件里面进行赋值：
+   加载组件的时候，给max和min重新赋值。值在data中。<Counter :max="Counter.max" :min="Counter.min" />
+    Counter:{
+              max:10,
+              min:1
+          }
+通过props接收传递的数据，props里面数据的类型要定义name和type：
+ props:{回来。
+        DownData:{
+            type:Array,            //要定义类型，Array为数组
+            default:function(){    //default是定义初始值，如果是数字，可以直接加上去，如果是数组，那么要通过函数return
+                return[   {name:"初级版",value:1},{name:"中级版",value:2},{name:"高级版",value:3}   ]  }}
+制作下拉菜单，就是先建立一个样式，然后在数据框下面把要加的菜单都制作出来，只不过平时是隐藏的，只不过点击下来菜单的时候会显示，再点击相应选项的时候，又隐藏。所以先建立的框里添加一个点击事件，点击就显示菜单，在菜单里面也添加一个click事件，点击就在上面显示数据，并隐藏下拉菜单。
+需要先再<div>里用样式设计一个框，然后在<div>里面用<span>标签承载数据。这个数据是根据其他组件传回来的数据变动，所以用props定义数据，方便接收。
+通过props接收传递的数据，props里面数据的类型要定义name和type：
+ props:{回来。
+        DownData:{type:Array,            //要定义类型，Array为数组
+              default:function(){    //default是定义初始值，如果是数字，可以直接加上去，如果是数组，那么要通过函数return
+                return[   {name:"初级版",value:1},{name:"中级版",value:2},{name:"高级版",value:3}   ]  }}
+这个数据平时隐藏，要点击下来菜单，点到哪个出来哪个，所以还要有一个数组，再新建一个for循环，<li>标签里的数据就是data中的，通过click点击事件，来进行显示和隐藏，定义show：false，点击就取反。
+数据需要再引用的组件中添加，在data中添加： Downmenu:[  {name:"初级版",value:1},{name:"中级版",value:2},{name:"高级版",value:3} ] 
+添加数据后，要在视图中定义：<Downmenu :DownData="Downmenu" />。前面是计算组件中对应的名称，后面是本页面中的数值，将本页面的数值传递给计算组件。
+问题：selcetList(index){this.nowData = index;}
+ showHide(){ this.show = !this.show}  这两个函数中，为什么要加this，不加就显示错误。

@@ -21,6 +21,7 @@ export default new Router({
       path: '/children',
       name: 'Children',
       component: Children,
+      redirect: '/children/loud',
       children: [
         { 
           path: 'car', 

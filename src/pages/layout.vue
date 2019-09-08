@@ -56,7 +56,7 @@
                     <div class="index-board-item-inner">
                         <h2>{{ pro.title }}</h2>
                         <h3>{{ pro.desc }}</h3>
-                        <router-link target="_blank" :to="pro.tag" class="button">立即购买</router-link>
+                        <router-link target="_blank" :to="{path:'/children/'+ pro.tag}" class="button">立即购买</router-link>
                     </div>
 
 
